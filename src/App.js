@@ -8,7 +8,10 @@ import api from './utils/api'
 import sortByDate from './utils/sortByDate'
 import isLocalHost from './utils/isLocalHost'
 import './App.css'
-
+import {BrowserRouter as Router,
+Switch,
+Route,
+Link} from "react-router-dom"
 export default class App extends Component {
   state = {
     locations: [],
