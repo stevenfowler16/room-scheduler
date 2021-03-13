@@ -156,30 +156,30 @@ export default class App extends Component {
       })
     })
   }
-  updateTodoTitle = (event, currentValue) => {
+  updateLocationName = (event, currentValue) => {
     let isDifferent = false
-    const todoId = event.target.dataset.key
+    const locationId = event.target.dataset.key
 
-    const updatedTodos = this.state.todos.map((todo, i) => {
-      const id = getLocationId(todo)
-      if (id === todoId && todo.data.title !== currentValue) {
-        todo.data.title = currentValue
+    const updateLocations = this.state.locations.map((location, i) => {
+      const id = getLocationId(location)
+      if (id === locationId && location.data.name !== currentValue) {
+        location.data.name = currentValue
         isDifferent = true
       }
-      return todo
+      return location
     })
 
     // only set state if input different
     if (isDifferent) {
       this.setState({
-        todos: updatedTodos
+        locations: updateLocations
       }, () => {
-        api.update(todoId, {
-          title: currentValue
+        api.update(locationId, {
+          name: currentValue
         }).then(() => {
-          console.log(`update todo ${todoId}`, currentValue)
-          analytics.track('todoUpdated', {
-            category: 'todos',
+          console.log(`update location ${locationId}`, currentValue)
+          analytics.track('locationUpdated', {
+            category: 'locations',
             label: currentValue
           })
         }).catch((e) => {
@@ -246,10 +246,10 @@ export default class App extends Component {
       category: 'modal'
     })
   }
-  renderTodos() {
-    const { todos } = this.state
+  renderLocations() {
+    const { locations } = this.state
 
-    if (!todos || !todos.length) {
+    if (!locations || !locations.length) {
       // Loading State here
       return null
     }
@@ -257,11 +257,11 @@ export default class App extends Component {
     const timeStampKey = 'ts'
     const orderBy = 'desc' // or `asc`
     const sortOrder = sortByDate(timeStampKey, orderBy)
-    const todosByDate = todos.sort(sortOrder)
+    const todosByDate = locations.sort(sortOrder)
 
-    return todosByDate.map((todo, i) => {
-      const { data, ref } = todo
-      const id = getLocationId(todo)
+    return todosByDate.map((location, i) => {
+      const { data, ref } = location
+      const id = getLocationId(location)
       // only show delete button after create API response returns
       let deleteButton
       if (ref) {
@@ -290,8 +290,8 @@ export default class App extends Component {
               <ContentEditable
                 tagName='span'
                 editKey={id}
-                onBlur={this.updateTodoTitle} // save on enter/blur
-                html={data.title}
+                onBlur={this.updateLocationName} // save on enter/blur
+                html={data.name}
                 // onChange={this.handleDataChange} // save on change
               />
             </div>
@@ -329,7 +329,7 @@ export default class App extends Component {
             </div>
           </form>
 
-          {this.renderTodos()}
+          {this.renderLocations()}
         </div>
         <SettingsMenu
           showMenu={this.state.showMenu}

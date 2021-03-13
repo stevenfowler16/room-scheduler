@@ -15,8 +15,8 @@ const readAll = () => {
   })
 }
 
-const update = (todoId, data) => {
-  return fetch(`/.netlify/functions/todos-update/${todoId}`, {
+const update = (locationId, data) => {
+  return fetch(`/.netlify/functions/locations-update/${locationId}`, {
     body: JSON.stringify(data),
     method: 'POST'
   }).then(response => {
