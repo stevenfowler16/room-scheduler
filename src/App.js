@@ -7,6 +7,7 @@ import analytics from './utils/analytics'
 import api from './utils/api'
 import sortByDate from './utils/sortByDate'
 import isLocalHost from './utils/isLocalHost'
+import Events from './components/Events'
 import './App.css'
 import {BrowserRouter as Router,
 Switch,
@@ -296,7 +297,7 @@ export default class App extends Component {
   render() {
     return (
       <div className='app'>
-
+        
         <AppHeader />
 
         <div className='location-list'>
@@ -328,6 +329,7 @@ export default class App extends Component {
           handleModalClose={this.closeModal}
           handleClearCompleted={this.clearCompleted}
         />
+        <Events />
       </div>
     )
   }

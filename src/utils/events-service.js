@@ -7,8 +7,21 @@ const create = (data) => {
       return response.json()
     });
 }
-
-
+const readAll = () => {
+    return fetch('/.netlify/functions/events-read-all').then((response) => {
+      return response.json()
+    })
+  }
+  const deleteEvent = (eventsId) => {
+    return fetch(`/.netlify/functions/events-delete/${eventsId}`, {
+      method: 'POST',
+    }).then(response => {
+      return response.json()
+    })
+  }
+  
 export default {
-    create:create
+    create:create,
+    readAll:readAll,
+    delete:deleteEvent
 }
