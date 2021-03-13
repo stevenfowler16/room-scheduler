@@ -271,11 +271,11 @@ export default class App extends Component {
           </button>
         )
       }
-      const boxIcon = (data.completed) ? '#todo__box__done' : '#todo__box'
+      // const boxIcon = (data.completed) ? '#todo__box__done' : '#todo__box'
       return (
         <div key={i} className='todo-item'>
           <label className="todo">
-            <input
+            {/* <input
               data-id={id}
               className="todo__state"
               type="checkbox"
@@ -285,7 +285,7 @@ export default class App extends Component {
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 25" className="todo__icon">
               <use xlinkHref={`${boxIcon}`} className="todo__box"></use>
               <use xlinkHref="#todo__check" className="todo__check"></use>
-            </svg>
+            </svg> */}
             <div className='todo-list-title'>
               <ContentEditable
                 tagName='span'
@@ -309,7 +309,7 @@ export default class App extends Component {
 
         <div className='todo-list'>
           <h2>
-            Create todo
+            Create Location
             <SettingsIcon onClick={this.openModal} className='mobile-toggle' />
           </h2>
           <form className='todo-create-wrapper' onSubmit={this.saveTodo}>
@@ -323,7 +323,7 @@ export default class App extends Component {
             />
             <div className='todo-actions'>
               <button className='todo-create-button'>
-                Create todo
+                Create location
               </button>
               <SettingsIcon onClick={this.openModal}  className='desktop-toggle' />
             </div>
