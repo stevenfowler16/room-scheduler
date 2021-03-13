@@ -20,8 +20,18 @@ const readAll = () => {
     })
   }
   
+  const searchByLocation = (data) => {
+    return fetch('/.netlify/functions/events-get-by-location', {
+        body: JSON.stringify(data),
+        method: 'POST'
+      }).then(response => {
+        return response.json()
+      });
+  }
+
 export default {
     create:create,
     readAll:readAll,
-    delete:deleteEvent
+    delete:deleteEvent,
+    searchByLocation:searchByLocation
 }

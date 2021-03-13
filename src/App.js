@@ -8,6 +8,7 @@ import api from './utils/api'
 import sortByDate from './utils/sortByDate'
 import isLocalHost from './utils/isLocalHost'
 import Events from './components/Events'
+import LocationAvailabilty from './components/LocationAvailabilty'
 import './App.css'
 import {BrowserRouter as Router,
 Switch,
@@ -330,6 +331,7 @@ export default class App extends Component {
           handleClearCompleted={this.clearCompleted}
         />
         <Events />
+        <LocationAvailabilty/>
       </div>
     )
   }
