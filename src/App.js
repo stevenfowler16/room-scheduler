@@ -271,22 +271,11 @@ export default class App extends Component {
           </button>
         )
       }
-      // const boxIcon = (data.completed) ? '#todo__box__done' : '#todo__box'
       return (
-        <div key={i} className='todo-item'>
+        <div key={i} className='location-item'>
           <label className="todo">
-            {/* <input
-              data-id={id}
-              className="todo__state"
-              type="checkbox"
-              onChange={this.handleTodoCheckbox}
-              checked={data.completed}
-            />
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 25" className="todo__icon">
-              <use xlinkHref={`${boxIcon}`} className="todo__box"></use>
-              <use xlinkHref="#todo__check" className="todo__check"></use>
-            </svg> */}
-            <div className='todo-list-title'>
+       
+            <div className='location-list-title'>
               <ContentEditable
                 tagName='span'
                 editKey={id}
@@ -307,15 +296,15 @@ export default class App extends Component {
 
         <AppHeader />
 
-        <div className='todo-list'>
+        <div className='location-list'>
           <h2>
             Create Location
             <SettingsIcon onClick={this.openModal} className='mobile-toggle' />
           </h2>
-          <form className='todo-create-wrapper' onSubmit={this.saveTodo}>
+          <form className='location-create-wrapper' onSubmit={this.saveTodo}>
             <input
-              className='todo-create-input'
-              placeholder='Add a todo item'
+              className='create-input'
+              placeholder='Add a location'
               name='name'
               ref={el => this.inputElement = el}
               autoComplete='off'
