@@ -3,10 +3,14 @@ import eventsService from '../../utils/events-service'
 import sortByDate from '../../utils/sortByDate'
 import ContentEditable from '../ContentEditable'
 import analytics from '../../utils/analytics'
+import Dropdown from 'react-dropdown';
+import api from '../../utils/api'
+import 'react-dropdown/style.css';
 
 export default class Events extends React.Component{
     state = {
-        events: []
+        events: [],
+        locationOptions:[]
       }
       componentDidMount() {
 
@@ -29,6 +33,25 @@ export default class Events extends React.Component{
             events: events
           })
         })
+         // Fetch all todos
+         api.readAll().then((locations) => {
+            if (locations.message === 'unauthorized') {
+              if (isLocalHost()) {
+                alert('FaunaDB key is not unauthorized. Make sure you set it in terminal session where you ran `npm start`. Visit http://bit.ly/set-fauna-key for more info')
+              } else {
+                alert('FaunaDB key is not unauthorized. Verify the key `FAUNADB_SERVER_SECRET` set in Netlify enviroment variables is correct')
+              }
+              return false
+            }
+      
+            console.log('all events', locations)
+            const options = locations.map(location =>{
+                return {value:getLocationId(location), label:location.data.name}
+            })
+            this.setState({
+                locationOptions: options
+            })
+          })
       }
     renderEvents() {
         const { events } = this.state
@@ -68,7 +91,8 @@ export default class Events extends React.Component{
                     // onChange={this.handleDataChange} // save on change
                   />
                   <div>{data.startTime}</div>
-                  <label>{data.endTime}</label>
+                  <div>{data.endTime}</div>
+                  <label>{data.location}</label>
                 </div>
               </label>
               {deleteButton}
@@ -84,11 +108,29 @@ export default class Events extends React.Component{
         const eventName = this.nameElement.value
         const eventStartTime = this.startTimeElement.value;
         const endTime = this.endTimeElement.value;
+        const locationId = this.locationDropdown.state.selected.value;
+        console.log(this.locationDropdown);
         if (!eventName) {
-          alert('Please add Location Name')
+          alert('Please add event Name')
           this.nameElement.focus()
           return false
         }
+        if (!eventStartTime) {
+            alert('Please add start time')
+            this.startTimeElement.focus()
+            return false
+          }
+          if (!endTime) {
+            alert('Please add end time')
+            this.endTimeElement.focus()
+            return false
+          }
+          if (!locationId) {
+            alert('Please add locationId ')
+            this.endTimeElement.focus()
+            return false
+          }
+    
     
         // reset input to empty
         this.nameElement.value = ''
@@ -96,7 +138,8 @@ export default class Events extends React.Component{
         const event = {
           name: eventName,
           startTime:eventStartTime,
-          endTime:endTime
+          endTime:endTime,
+          location:locationId
         }
         // Optimistically add todo to UI
         const newTodoArray = [{
@@ -204,6 +247,7 @@ export default class Events extends React.Component{
                 style={{marginRight: 20}}
                 type='datetime-local'
               />
+              <Dropdown ref={el => this.locationDropdown = el} options={this.state.locationOptions} placeholder="Select an option" />;
               <div className='todo-actions'>
                 <button className='todo-create-button'>
                   Create
