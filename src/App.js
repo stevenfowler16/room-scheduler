@@ -11,7 +11,7 @@ import './App.css'
 
 export default class App extends Component {
   state = {
-    todos: [],
+    locations: [],
     showMenu: false
   }
   componentDidMount() {
@@ -20,8 +20,8 @@ export default class App extends Component {
     analytics.page()
 
     // Fetch all todos
-    api.readAll().then((todos) => {
-      if (todos.message === 'unauthorized') {
+    api.readAll().then((locations) => {
+      if (locations.message === 'unauthorized') {
         if (isLocalHost()) {
           alert('FaunaDB key is not unauthorized. Make sure you set it in terminal session where you ran `npm start`. Visit http://bit.ly/set-fauna-key for more info')
         } else {
@@ -30,19 +30,19 @@ export default class App extends Component {
         return false
       }
 
-      console.log('all todos', todos)
+      console.log('all locations', locations)
       this.setState({
-        todos: todos
+        locations: locations
       })
     })
   }
   saveTodo = (e) => {
     e.preventDefault()
-    const { todos } = this.state
-    const todoValue = this.inputElement.value
+    const { locations } = this.state
+    const locationName = this.inputElement.value
 
-    if (!todoValue) {
-      alert('Please add Todo title')
+    if (!locationName) {
+      alert('Please add Location Name')
       this.inputElement.focus()
       return false
     }
@@ -50,52 +50,51 @@ export default class App extends Component {
     // reset input to empty
     this.inputElement.value = ''
 
-    const todoInfo = {
-      title: todoValue,
-      completed: false,
+    const location = {
+      name: locationName
     }
     // Optimistically add todo to UI
     const newTodoArray = [{
-      data: todoInfo,
+      data: location,
       ts: new Date().getTime() * 10000
     }]
 
-    const optimisticTodoState = newTodoArray.concat(todos)
+    const optimisticTodoState = newTodoArray.concat(locations)
 
     this.setState({
-      todos: optimisticTodoState
+      locations: optimisticTodoState
     })
     // Make API request to create new todo
-    api.create(todoInfo).then((response) => {
+    api.create(location).then((response) => {
       console.log(response)
       /* Track a custom event */
-      analytics.track('todoCreated', {
-        category: 'todos',
-        label: todoValue,
+      analytics.track('locationCreated', {
+        category: 'locations',
+        label: locationName,
       })
       // remove temporaryValue from state and persist API response
-      const persistedState = removeOptimisticTodo(todos).concat(response)
+      const persistedState = removeOptimisticLocation(locations).concat(response)
       // Set persisted value to state
       this.setState({
-        todos: persistedState
+        locations: persistedState
       })
     }).catch((e) => {
       console.log('An API error occurred', e)
-      const revertedState = removeOptimisticTodo(todos)
+      const revertedState = removeOptimisticLocation(locations)
       // Reset to original state
       this.setState({
-        todos: revertedState
+        locations: revertedState
       })
     })
   }
-  deleteTodo = (e) => {
-    const { todos } = this.state
-    const todoId = e.target.dataset.id
+  deleteLocation = (e) => {
+    const { locations } = this.state
+    const locationId = e.target.dataset.id
 
     // Optimistically remove todo from UI
-    const filteredTodos = todos.reduce((acc, current) => {
-      const currentId = getTodoId(current)
-      if (currentId === todoId) {
+    const filteredTodos = locations.reduce((acc, current) => {
+      const currentId = getLocationId(current)
+      if (currentId === locationId) {
         // save item being removed for rollback
         acc.rollbackTodo = current
         return acc
@@ -109,20 +108,20 @@ export default class App extends Component {
     })
 
     this.setState({
-      todos: filteredTodos.optimisticState
+      locations: filteredTodos.optimisticState
     })
 
     // Make API request to delete todo
-    api.delete(todoId).then(() => {
-      console.log(`deleted todo id ${todoId}`)
-      analytics.track('todoDeleted', {
-        category: 'todos',
+    api.delete(locationId).then(() => {
+      console.log(`deleted location id ${locationId}`)
+      analytics.track('locationDeleted', {
+        category: 'locations',
       })
     }).catch((e) => {
-      console.log(`There was an error removing ${todoId}`, e)
+      console.log(`There was an error removing ${locationId}`, e)
       // Add item removed back to list
       this.setState({
-        todos: filteredTodos.optimisticState.concat(filteredTodos.rollbackTodo)
+        locations: filteredTodos.optimisticState.concat(filteredTodos.rollbackTodo)
       })
     })
   }
@@ -134,7 +133,7 @@ export default class App extends Component {
 
     const updatedTodos = todos.map((todo, i) => {
       const { data } = todo
-      const id = getTodoId(todo)
+      const id = getLocationId(todo)
       if (id === todoId && data.completed !== todoCompleted) {
         data.completed = todoCompleted
       }
@@ -162,7 +161,7 @@ export default class App extends Component {
     const todoId = event.target.dataset.key
 
     const updatedTodos = this.state.todos.map((todo, i) => {
-      const id = getTodoId(todo)
+      const id = getLocationId(todo)
       if (id === todoId && todo.data.title !== currentValue) {
         todo.data.title = currentValue
         isDifferent = true
@@ -196,7 +195,7 @@ export default class App extends Component {
     const data = todos.reduce((acc, current) => {
       if (current.data.completed) {
         // save item being removed for rollback
-        acc.completedTodoIds = acc.completedTodoIds.concat(getTodoId(current))
+        acc.completedTodoIds = acc.completedTodoIds.concat(getLocationId(current))
         return acc
       }
       // filter deleted todo out of the todos list
@@ -262,12 +261,12 @@ export default class App extends Component {
 
     return todosByDate.map((todo, i) => {
       const { data, ref } = todo
-      const id = getTodoId(todo)
+      const id = getLocationId(todo)
       // only show delete button after create API response returns
       let deleteButton
       if (ref) {
         deleteButton = (
-          <button data-id={id} onClick={this.deleteTodo}>
+          <button data-id={id} onClick={this.deleteLocation}>
             delete
           </button>
         )
@@ -342,16 +341,16 @@ export default class App extends Component {
   }
 }
 
-function removeOptimisticTodo(todos) {
+function removeOptimisticLocation(locations) {
   // return all 'real' todos
-  return todos.filter((todo) => {
-    return todo.ref
+  return locations.filter((locations) => {
+    return locations.ref
   })
 }
 
-function getTodoId(todo) {
-  if (!todo.ref) {
+function getLocationId(location) {
+  if (!location.ref) {
     return null
   }
-  return todo.ref['@ref'].id
+  return location.ref['@ref'].id
 }
