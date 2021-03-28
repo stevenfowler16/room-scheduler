@@ -12,13 +12,14 @@
 }
 .app-header {
   background-color: #222;
-  height: 105px;
+
   padding: 20px;
   color: white;
   padding-left: 60px;
 }
 .app-left-nav {
   display: flex;
+
 }
 .app-title {
   font-size: 32px;

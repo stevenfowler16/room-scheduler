@@ -192,3 +192,32 @@
   stroke-dashoffset: 0;
   transition-delay: 0s;
 }
+
+.ml-auto{
+  margin-left:auto;
+}
+
+.mr-auto{
+  margin-right:auto
+}
+
+.flex-direction-col{
+  flex-direction: column;
+}
+
+.d-flex{
+  display: flex;
+}
+
+.font-white{
+  color:white;
+}
+
+.nav-item{
+  padding:15px;
+  color:white;
+}
+
+.nav-item-active{
+  color:aquamarine;
+}
