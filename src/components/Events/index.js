@@ -90,8 +90,8 @@ export default class Events extends React.Component{
                     html={data.name}
                     // onChange={this.handleDataChange} // save on change
                   />
-                  <div>{data.startTime}</div>
-                  <div>{data.endTime}</div>
+                  <div>{convertDate(data.startTime)}</div>
+                  <div>{convertDate(data.endTime)}</div>
                   <label>{data.location}</label>
                 </div>
               </label>
@@ -106,6 +106,7 @@ export default class Events extends React.Component{
    
 
         const eventName = this.nameElement.value
+        const date = this.dateElement.value;
         const eventStartTime = this.startTimeElement.value;
         const endTime = this.endTimeElement.value;
         const locationId = this.locationDropdown.state.selected.value;
@@ -113,6 +114,11 @@ export default class Events extends React.Component{
         if (!eventName) {
           alert('Please add event Name')
           this.nameElement.focus()
+          return false
+        }
+        if (!date) {
+          alert('Please add event Date')
+          this.dateElement.focus()
           return false
         }
         if (!eventStartTime) {
@@ -130,15 +136,20 @@ export default class Events extends React.Component{
             this.endTimeElement.focus()
             return false
           }
-    
-    
+          console.log(eventStartTime)
+          console.log(endTime)
+          const startDateTime = new Date(`${date} ${eventStartTime}`)
+          const endDateTime = new Date(`${date} ${endTime}`)
+          console.log(endDateTime)
+          console.log(startDateTime);
+   
         // reset input to empty
         this.nameElement.value = ''
     
         const event = {
           name: eventName,
-          startTime:eventStartTime,
-          endTime:endTime,
+          startTime:startDateTime.getTime(),
+          endTime:endDateTime.getTime(),
           location:locationId
         }
         // Optimistically add todo to UI
@@ -220,24 +231,35 @@ export default class Events extends React.Component{
             <h2>
               Create Event
             </h2>
-            <form className='location-create-wrapper' onSubmit={this.saveEvent} >
+            <form className='location-create-wrapper flex-direction-col' onSubmit={this.saveEvent} >
+              <label>Name</label>
               <input
                 className='create-input'
-                placeholder='Add a name'
                 name='name'
                 ref={el => this.nameElement = el}
                 autoComplete='off'
                 style={{marginRight: 20}}
               />
+                <label>Date</label>
               <input
                 className='create-input'
-                placeholder='Add a start time'
+                name='date'
+                ref={el => this.dateElement = el}
+                autoComplete='off'
+                style={{marginRight: 20}}
+                type='date'
+              />
+                   <label>Start Time</label>
+                <input
+                className='create-input'
+                placeholder='Add a end time'
                 name='startTime'
                 ref={el => this.startTimeElement = el}
                 autoComplete='off'
                 style={{marginRight: 20}}
-                type='datetime-local'
+                type='time'
               />
+                <label>End Time</label>
                 <input
                 className='create-input'
                 placeholder='Add a end time'
@@ -245,9 +267,10 @@ export default class Events extends React.Component{
                 ref={el => this.endTimeElement = el}
                 autoComplete='off'
                 style={{marginRight: 20}}
-                type='datetime-local'
+                type='time'
               />
-              <Dropdown ref={el => this.locationDropdown = el} options={this.state.locationOptions} placeholder="Select an option" />;
+              <label>Location</label>
+              <Dropdown ref={el => this.locationDropdown = el} options={this.state.locationOptions} placeholder="Location" />
               <div className='todo-actions'>
                 <button className='todo-create-button'>
                   Create
@@ -276,4 +299,10 @@ function removeOptimisticLocation(locations) {
     return locations.filter((locations) => {
       return locations.ref
     })
+  }
+
+  function convertDate(date){
+    let dateFormat = new Intl.DateTimeFormat('en-US',{dateStyle:"medium",timeStyle:'medium'});
+    console.log(date)
+    return dateFormat.format(new Date(date));
   }

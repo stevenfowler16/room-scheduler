@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import AppHeader from "./components/AppHeader";
 import SettingsMenu from "./components/SettingsMenu";
 import Events from "./components/Events";
-import LocationAvailabilty from "./components/LocationAvailabilty";
+import LocationAvailability from "./components/LocationAvailability";
 import Locations from "./components/Locations"
 import "./App.css";
 import {
@@ -21,8 +21,8 @@ export default class App extends Component {
           <AppHeader />
 
           <Switch>
-            <Route path="/LocationAvailabilty">
-              <LocationAvailabilty />
+            <Route path="/LocationAvailability">
+              <LocationAvailability />
             </Route>
             <Route path="/locations">
               <Locations />

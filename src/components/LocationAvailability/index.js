@@ -4,16 +4,18 @@ import eventsService from '../../utils/events-service'
 import analytics from '../../utils/analytics'
 import sortByDate from '../../utils/sortByDate'
 import Dropdown from 'react-dropdown';
-export default class LocationAvailabilty extends React.Component{
+export default class LocationAvailability extends React.Component{
     state ={
         locations:[],
         locationOptions: [],
         eventsForCurrentLocation:[],
         currentLocation:{}
     }
-    loadEventsForLocation= () =>{
-     
-        const locationId = this.locationDropdown.state.selected.value;
+    loadEventsForLocation= (options) =>{
+      
+        const locationId = options.value;
+        console.log(locationId)
+        console.log(options)
         eventsService.searchByLocation(locationId).then((response) => {
             console.log(response)
             /* Track a custom event */
@@ -39,7 +41,7 @@ export default class LocationAvailabilty extends React.Component{
         /* Track a page view */
         analytics.page()
     
-         // Fetch all todos
+         // Fetch all locations
          api.readAll().then((locations) => {
             if (locations.message === 'unauthorized') {
               if (isLocalHost()) {
@@ -62,21 +64,19 @@ export default class LocationAvailabilty extends React.Component{
       } 
       renderEvents() {
         const { eventsForCurrentLocation } = this.state
-        console.log("test before render")
-        console.log(eventsForCurrentLocation)
-        console.log(eventsForCurrentLocation.length)
+
         if (!eventsForCurrentLocation || !eventsForCurrentLocation.length) {
           console.log("null?")
             // Loading State here
           return null
         }
-        console.log("test before sort")
+
         const timeStampKey = 'ts'
         const orderBy = 'desc' // or `asc`
         const sortOrder = sortByDate(timeStampKey, orderBy)
-        const todosByDate = eventsForCurrentLocation.sort(sortOrder)
-        console.log("test render")
-        return todosByDate.map((event, i) => { 
+        const locationsByDate = eventsForCurrentLocation.sort(sortOrder)
+
+        return locationsByDate.map((event, i) => { 
             const { data } = event
             console.log(data)
           return (
@@ -85,9 +85,8 @@ export default class LocationAvailabilty extends React.Component{
            
                 <div className='location-list-title'>
                   <div> {data.name}</div>
-                  <div>{data.startTime}</div>
-                  <div>{data.endTime}</div>
-                  <label>{data.location}</label>
+                  <div>{formatDate(data.startTime)}</div>
+                  <div>{formatDate(data.endTime)}</div>
                 </div>
               </label>
             
@@ -97,7 +96,7 @@ export default class LocationAvailabilty extends React.Component{
       }
     render(){
         return (
-        <div>
+        <div className='location-list'>
         <h2>Choose Location</h2>
         <Dropdown ref={el => this.locationDropdown = el} options={this.state.locationOptions} onChange={this.loadEventsForLocation} placeholder="Select an option" />
         {this.renderEvents()}
@@ -105,6 +104,18 @@ export default class LocationAvailabilty extends React.Component{
         )
     }
 
+}
+
+function formatDate(date){
+  let dateFormat = new Intl.DateTimeFormat('en-US',{dateStyle:"medium",timeStyle:'medium'});
+  console.log(date)
+  try{
+    return dateFormat.format(date);
+  }
+  catch{
+    return "";
+  }
+  
 }
 
 function getLocationId(location) {

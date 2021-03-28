@@ -13,7 +13,7 @@ exports.handler = (event, context) => {
   return client.query(
       q.Map(
         q.Paginate(
-            q.Match(q.Index(`occasions_search_by_location`),`292953679655338499`)
+            q.Match(q.Index(`occasions_search_by_location`),`${id}`)
             ),
             q.Lambda("occasions",q.Get(q.Var("occasions")))
         )

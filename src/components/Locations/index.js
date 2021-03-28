@@ -1,7 +1,5 @@
 import React from 'react'
 import ContentEditable from '../ContentEditable'
-import SettingsMenu from "../SettingsMenu";
-import SettingsIcon from "../SettingsIcon";
 import analytics from "../../utils/analytics";
 import sortByDate from '../../utils/sortByDate';
 import api from '../../utils/api'
@@ -297,7 +295,7 @@ export default class Locations extends React.Component {
         <div className='location-list'>
           <h2>
             Create Location
-            <SettingsIcon onClick={this.openModal} className='mobile-toggle' />
+           
           </h2>
           <form className='location-create-wrapper' onSubmit={this.saveTodo}>
             <input
@@ -312,17 +310,13 @@ export default class Locations extends React.Component {
               <button className='todo-create-button'>
                 Create location
               </button>
-              <SettingsIcon onClick={this.openModal}  className='desktop-toggle' />
+
             </div>
           </form>
 
           {this.renderLocations()}
         </div>
-        <SettingsMenu
-          showMenu={this.state.showMenu}
-          handleModalClose={this.closeModal}
-          handleClearCompleted={this.clearCompleted}
-        />
+       
         
       </div>
     

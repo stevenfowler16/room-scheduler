@@ -17,14 +17,12 @@ const AppHeader = (props) => {
                Schedule Rooms Easily
               </p>
             </div>
-
           </div>
-          
         </div>
         <div className="d-flex font-white">
             <NavLink className="nav-item" activeClassName="nav-item-active" to="/locations">Locations</NavLink>
             <NavLink className="nav-item" activeClassName="nav-item-active" to="/events">Events</NavLink>
-            <NavLink className="nav-item" activeClassName="nav-item-active" to="/locationAvailablity">Location Availability</NavLink>
+            <NavLink className="nav-item" activeClassName="nav-item-active" to="/LocationAvailability">Location Availability</NavLink>
           </div>
       </div>
     </header>
