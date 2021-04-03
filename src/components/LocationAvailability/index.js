@@ -4,6 +4,7 @@ import eventsService from '../../utils/events-service'
 import analytics from '../../utils/analytics'
 import sortByDate from '../../utils/sortByDate'
 import Dropdown from 'react-dropdown';
+import Calendar from '../Calendar'
 export default class LocationAvailability extends React.Component{
     state ={
         locations:[],
@@ -11,11 +12,11 @@ export default class LocationAvailability extends React.Component{
         eventsForCurrentLocation:[],
         currentLocation:{}
     }
-    loadEventsForLocation= (options) =>{
-      
-        const locationId = options.value;
-        console.log(locationId)
-        console.log(options)
+    loadEventsForLocation= (e) =>{
+      e.preventDefault()
+      // const date = this.dateElement.value;
+      const locationId = this.locationDropdown.state.selected.value;
+        
         eventsService.searchByLocation(locationId).then((response) => {
             console.log(response)
             /* Track a custom event */
@@ -97,9 +98,27 @@ export default class LocationAvailability extends React.Component{
     render(){
         return (
         <div className='location-list'>
+          <form className='location-create-wrapper flex-direction-col' onSubmit={this.loadEventsForLocation} >
         <h2>Choose Location</h2>
-        <Dropdown ref={el => this.locationDropdown = el} options={this.state.locationOptions} onChange={this.loadEventsForLocation} placeholder="Select an option" />
-        {this.renderEvents()}
+        <Dropdown ref={el => this.locationDropdown = el} options={this.state.locationOptions}  placeholder="Select an option" />
+        {/* <label>Date</label>
+        <input
+                className='create-input'
+                name='date'
+                ref={el => this.dateElement = el}
+                autoComplete='off'
+                style={{marginRight: 20}}
+                type='date'
+        /> */}
+        <div className='todo-actions'>
+                <button className='todo-create-button'>
+                  Get Events
+                </button>     
+        </div> 
+      
+        </form>
+        
+        <Calendar events={this.state.eventsForCurrentLocation}></Calendar>
         </div>
         )
     }

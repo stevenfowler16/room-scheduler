@@ -1,0 +1,9 @@
+.time-block{
+    padding-bottom: 25px;
+    border-top:1px solid black
+}
+
+.calendar-event-item{
+    margin:2px;
+    background-color: #C1E0F7;
+}

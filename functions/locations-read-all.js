@@ -13,7 +13,7 @@ exports.handler = (event, context) => {
     .then((response) => {
       const locationRefs = response.data
       console.log('location refs', locationRefs)
-      console.log(`${locationRefs.length} todos found`)
+      console.log(`${locationRefs.length} locations found`)
       // create new query out of todo refs. http://bit.ly/2LG3MLg
       const getAllLocationDataQuery = locationRefs.map((ref) => {
         return q.Get(ref)
